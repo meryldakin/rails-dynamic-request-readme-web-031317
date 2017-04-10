@@ -1,13 +1,36 @@
 # This file is copied to spec/ when you run 'rails generate rspec:install'
+
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 # Prevent database truncation if the environment is production
 abort("The Rails environment is running in production mode!") if Rails.env.production?
+
 require 'spec_helper'
 require 'rspec/rails'
 require 'capybara/rails'
 # Add additional requires below this line. Rails is not loaded until this point!
+require 'rails_helper'
 
+describe 'navigate' do
+  before do
+    @post = Post.create(title: "My Post", description: "My post desc")
+  end
+
+  it 'loads the show page' do
+    visit "/posts/#{@post.id}"
+    expect(page.status_code).to eq(200)
+  end
+
+  it 'shows the title on the show page in an h1 tag' do
+    visit "/posts/#{@post.id}"
+    expect(page).to have_css("h1", text: "My Post")
+  end
+
+  it 'shows the description on the show page in a p tag' do
+  visit "/posts/#{@post.id}"
+  expect(page).to have_css("p", text: "My post desc")
+  end
+end
 # Requires supporting ruby files with custom matchers and macros, etc, in
 # spec/support/ and its subdirectories. Files matching `spec/**/*_spec.rb` are
 # run as spec files by default. This means that files in spec/support that end
